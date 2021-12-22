@@ -1,5 +1,5 @@
 import scrapy
-
+import json
 
 class NasaSpider(scrapy.Spider):
     name = "sightings"
@@ -8,21 +8,31 @@ class NasaSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        sighting = []
-        for returned_item in response.css('td::text').getall():
-            # append relevant returned_items
-            if "\n" not in returned_item:
-                sighting.append(returned_item)
+        # Open json file and add first bracket
+        with open("sightings.json", "w") as file:
+            file.write('[\n')
 
-            # End of individual sighting reached
-            if len(sighting) == 5:
-                # Yield items in each list to a dictionary
-                yield {
-                    'date': sighting[0],
-                    'visible':sighting[1],
-                    'max height':sighting[2],
-                    'appears':sighting[3],
-                    'disappears':sighting[4],
-                }
-                #reset sighting
-                sighting = []
+            sighting = []
+            for returned_item in response.css('td::text').getall():
+                # append relevant returned_items
+                if "\n" not in returned_item:
+                    sighting.append(returned_item)
+
+                # End of individual sighting reached
+                if len(sighting) == 5:
+                    # Write each item to the file
+                    json.dump({
+                        'date': sighting[0],
+                        'visible':sighting[1],
+                        'max height':sighting[2],
+                        'appears':sighting[3],
+                        'disappears':sighting[4],
+                    }, file)
+                    # Reset sighting
+                    sighting = []
+
+                    # New line
+                    file.write(",\n")
+
+            # Add final bracket        
+            file.write(']')
