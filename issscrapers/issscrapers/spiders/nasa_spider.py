@@ -12,7 +12,10 @@ class NasaSpider(scrapy.Spider):
         with open("sightings.json", "w") as file:
             file.write('[\n')
 
+            # Instantiate variables
             sighting = []
+            i = 0
+
             for returned_item in response.css('td::text').getall():
                 # append relevant returned_items
                 if "\n" not in returned_item:
@@ -31,8 +34,14 @@ class NasaSpider(scrapy.Spider):
                     # Reset sighting
                     sighting = []
 
-                    # New line
-                    file.write(",\n")
+                    # 3 subtracted to account for extraeneous returned items
+                    if i != len(response.css('td::text').getall()) - 5:
+                        # New line
+                        file.write(",\n")
+                    else:
+                        file.write("\n")
 
+                i = i + 1
+      
             # Add final bracket        
             file.write(']')
