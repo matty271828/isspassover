@@ -8,7 +8,21 @@ class NasaSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        for sighting in response.css('td::text').getall():
-            yield {
-                'sighting': sighting,
-            }
+        sighting = []
+        for returned_item in response.css('td::text').getall():
+            # append relevant returned_items
+            if "\n" not in returned_item:
+                sighting.append(returned_item)
+
+            # End of individual sighting reached
+            if len(sighting) == 5:
+                # Yield items in each list to a dictionary
+                yield {
+                    'date': sighting[0],
+                    'visible':sighting[1],
+                    'max height':sighting[2],
+                    'appears':sighting[3],
+                    'disappears':sighting[4],
+                }
+                #reset sighting
+                sighting = []
