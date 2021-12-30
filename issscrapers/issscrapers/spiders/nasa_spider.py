@@ -34,7 +34,7 @@ class NasaSpider(scrapy.Spider):
                     # Reset sighting
                     sighting = []
 
-                    # 3 subtracted to account for extraeneous returned items
+                    # 5 subtracted to account for extraeneous returned items
                     if i != len(response.css('td::text').getall()) - 5:
                         # New line
                         file.write(",\n")
