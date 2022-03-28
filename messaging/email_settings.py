@@ -1,0 +1,6 @@
+smtp_server = "smtp address of my mail server"
+port = "port number that connections occur on"
+login_user = "logon username"
+login_pass = "logon password"
+from_address = "matthewmacleantestone@gmail.com"
+to_address = "matthewmacleantestone@gmail.com"
